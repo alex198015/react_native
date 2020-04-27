@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import { StyleSheet, View , TextInput, Button,Alert} from 'react-native'
+import { THEME } from './../theme';
 
 export const AddTodo = ({onSubmit}) => {
     const[value, setValue] = useState('')
@@ -22,8 +23,8 @@ export const AddTodo = ({onSubmit}) => {
                 onChangeText={setValue}
                 placeholder="Введите название дела"
                 autoCorrect={false}
-                autoCapitalize='none'
-                placeholderTextColor="pink"
+                autoCapitalize='sentences'
+                placeholderTextColor={THEME.PLACEHOLDER_COLOR}
                 keyboardType="default"
                 />
             <Button title="Добавить" onPress={pressHandler}/>
@@ -42,7 +43,7 @@ const styles = StyleSheet.create({
         width: '70%',
         borderStyle: 'solid',
         borderBottomWidth:2,
-        borderBottomColor:'#3949ab',
+        borderBottomColor:THEME.MAIN_COLOR,
         padding: 10
     }
 })
