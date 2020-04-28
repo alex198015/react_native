@@ -1,16 +1,38 @@
 import React ,{useState}from 'react'
 import { StyleSheet, Alert, View } from 'react-native'
+import * as Font from 'expo-font'
+import {AppLoading} from 'expo'
+
 import {Navbar} from './src/components/Navbar'
 import { MainScreen } from './src/screens/MainScreen';
 import { TodoScreen } from './src/screens/TodoScreen';
+import { THEME } from './src/theme'
+
+
+
+async function loadApplication (){
+  await Font.loadAsync({
+      'roboto-regular': require('./assets/fonts/Roboto-Regular.ttf'),
+      'roboto-bold': require('./assets/fonts/Roboto-Bold.ttf')
+  })
+}
 
 export default function App() {
+  const [isReady, setIsRady] = useState(false)
   const [todoId, setTodoID] = useState(null)
   const [todos, setTodos] = useState([
     {id: '1' , title: 'Выучить React Native'}
    
   ])
 
+  if(!isReady){
+    return <AppLoading 
+        startAsync={loadApplication} 
+        onError={err => console.log(err)}
+        onFinish={() => setIsRady(true)}
+        />
+    
+  }
 
   const updateTodo = (id, title) => {
     setTodos(old => old.map(todo => {
@@ -86,7 +108,7 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 30,
+    paddingHorizontal: THEME.PADDING_HORIZONTAL,
     paddingVertical: 20
   }
 });

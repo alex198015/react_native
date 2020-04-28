@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
 import { StyleSheet, View, TextInput, Button, Modal, Alert} from 'react-native';
 import { THEME } from './../theme';
+import { AppButton } from './UI/AppButton';
 
 
 export const EditModal = ({visible, onCancel, value, onSave}) => {
@@ -20,15 +21,15 @@ export const EditModal = ({visible, onCancel, value, onSave}) => {
             <View style={styles.wrap}>
                 <TextInput style={styles.input} 
                     placeholder="Введите название" 
-                    autoCapitalize="none" 
-                    autoFocus="false"
+                    autoCapitalize="sentences" 
+                    autoFocus={false}
                     maxLength={64}
                     value={title}
                     onChangeText={setTitle}
                     />
                 <View style={styles.buttons}>
-                <Button title="Отменить" onPress={onCancel} color={THEME.DANGER_COLOR}/>
-                <Button title="Сохранить" onPress={saveHandler}/>
+                <AppButton onPress={onCancel} color={THEME.DANGER_COLOR}>Отменить</AppButton>
+                <AppButton onPress={saveHandler}>Сохранить</AppButton>
                 </View>
         </View>
         </Modal>
