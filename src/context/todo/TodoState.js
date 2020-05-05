@@ -4,6 +4,7 @@ import { todoReducer } from './todoReducer';
 import { ADD_TODO, REMOVE_TODO, UPDATE_TODO, FETCH_TODOS, SHOW_LOADER, HIDE_LOADER, SHOW_ERROR, CLEAR_ERROR } from './../type';
 import { ScreenContext } from './../screen/screenContext';
 import { Alert } from 'react-native'
+import {Http} from '../../http'
 
 export const TodoState = ({ children }) => {
   const initialState = {
@@ -17,16 +18,22 @@ export const TodoState = ({ children }) => {
   const [state, dispatch] = useReducer(todoReducer, initialState)
 
   const addTodo = async title => {
+    clearError()
+    // const response = await fetch('https://react-native-c552d.firebaseio.com/todos.json', {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify({ title })
+    // })
 
-    const response = await fetch('https://react-native-c552d.firebaseio.com/todos.json', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title })
-    })
+    // const data = await response.json()
+    try{
+      const data = await Http.post('https://react-native-c552d.firebaseio.com/todos.json',{title})
 
-    const data = await response.json()
-
-    dispatch({ type: ADD_TODO, title, id: data.name })
+      dispatch({ type: ADD_TODO, title, id: data.name })
+    }catch(e){
+      showError('Что-то пошло не так !')
+    }
+    
 
   }
 
@@ -45,10 +52,11 @@ export const TodoState = ({ children }) => {
           style: 'destructive',
           onPress: async () => {          
             changeScreen(null)
-            await fetch(`https://react-native-c552d.firebaseio.com/todos/${id}.json`,{
-              method:'DELETE',
-              headers:{'Content-Type': 'application/json'}
-            })
+            await Http.delete(`https://react-native-c552d.firebaseio.com/todos/${id}.json`)
+            // await fetch(`https://react-native-c552d.firebaseio.com/todos/${id}.json`,{
+            //   method:'DELETE',
+            //   headers:{'Content-Type': 'application/json'}
+            // })
 
             dispatch({ type: REMOVE_TODO, id })
             
@@ -64,11 +72,12 @@ export const TodoState = ({ children }) => {
     clearError()
     try {
 
-      const response = await fetch('https://react-native-c552d.firebaseio.com/todos.json', {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' }
-      })
-      const data = await response.json()
+      // const response = await fetch('https://react-native-c552d.firebaseio.com/todos.json', {
+      //   method: 'GET',
+      //   headers: { 'Content-Type': 'application/json' }
+      // })
+      // const data = await response.json()
+      const data = await Http.get('https://react-native-c552d.firebaseio.com/todos.json')
       if(!data){
         return null
       }
@@ -90,11 +99,12 @@ export const TodoState = ({ children }) => {
   const updateTodo = async (id, title) => {
     clearError()
     try {
-      await fetch(`https://react-native-c552d.firebaseio.com/todos/${id}.json`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title })
-      })
+      // await fetch(`https://react-native-c552d.firebaseio.com/todos/${id}.json`, {
+      //   method: 'PATCH',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify({ title })
+      // })
+      await Http.patch(`https://react-native-c552d.firebaseio.com/todos/${id}.json`,{title})
       dispatch({ type: UPDATE_TODO, id, title })
 
     } catch (e) {
